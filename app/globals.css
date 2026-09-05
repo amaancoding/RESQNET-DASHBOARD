@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+:root {
+  --navy-950: #060b16;
+  --navy-900: #0b1628;
+  --navy-850: #101d35;
+  --navy-800: #152744;
+  --navy-700: #1d3558;
+  --line: rgba(125, 176, 255, 0.16);
+  --text: #e8eef7;
+  --muted: #8ba0bd;
+  --accent: #e11d48;
+  --cyan: #22d3ee;
+  --ok: #22c55e;
+  --warn: #eab308;
+  --high: #f97316;
+}
+
+@theme inline {
+  --color-navy-950: var(--navy-950);
+  --color-navy-900: var(--navy-900);
+  --color-navy-850: var(--navy-850);
+  --color-navy-800: var(--navy-800);
+  --color-navy-700: var(--navy-700);
+  --color-line: var(--line);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-cyan: var(--cyan);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-high: var(--high);
+  --font-sans: var(--font-ibm-plex-sans);
+  --font-mono: var(--font-ibm-plex-mono);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #234372 transparent;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--navy-950);
+  color: var(--text);
+  font-family: var(--font-ibm-plex-sans), "Segoe UI", sans-serif;
+}
+
+.ops-grid {
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+    radial-gradient(1200px 500px at 0% -10%, rgba(34, 211, 238, 0.12), transparent 55%),
+    radial-gradient(900px 400px at 100% 0%, rgba(225, 29, 72, 0.08), transparent 50%);
+  background-size: 48px 48px, 48px 48px, auto, auto;
+}
+
+.pulse-dot {
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+  animation: pulse-dot 2s ease-out infinite;
+}
+
+@keyframes pulse-dot {
+  70% {
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table-wrap table {
+  min-width: 860px;
+}
