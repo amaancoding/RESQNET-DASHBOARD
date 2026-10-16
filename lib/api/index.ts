@@ -1,16 +1,20 @@
 import { apiGet, apiPatch, apiPost } from "@/lib/api/client";
-import { ADMIN_ROUTES } from "@/lib/api/config";
+import { ADMIN_ROUTES, PUBLIC_ROUTES } from "@/lib/api/config";
 import { normalizeDashboard, normalizeEmergency } from "@/lib/api/normalize";
 import type {
   AdminProfile,
   AnalyticsSnapshot,
   AuditLogResponse,
+  CreatedEmergency,
   DashboardOverview,
   Emergency,
   EmergencyListResponse,
   EmergencyQuery,
   EmergencyStatus,
   FeedbackResponse,
+  ResqAiAnalysis,
+  ResqAiMeta,
+  ResqAiSnapshot,
   UnavailableResource,
   UsersResponse,
 } from "@/lib/types";
@@ -87,7 +91,35 @@ export function getAuditLogs() {
 }
 
 export function getResqAiSnapshot() {
-  return apiGet<UnavailableResource>(ADMIN_ROUTES.resqAi);
+  return apiGet<ResqAiSnapshot>(ADMIN_ROUTES.resqAi);
+}
+
+export function analyzeResqAi(message: string) {
+  return apiPost<ResqAiAnalysis>(PUBLIC_ROUTES.resqAiAnalyze, { message });
+}
+
+export function getResqAiMeta() {
+  return apiGet<ResqAiMeta>(PUBLIC_ROUTES.resqAiMeta);
+}
+
+export function sendResqAiSos(payload: {
+  latitude: number;
+  longitude: number;
+  description: string;
+  severity: "low" | "medium" | "high" | "critical";
+  messageId: string;
+}) {
+  return apiPost<CreatedEmergency>(PUBLIC_ROUTES.emergency, {
+    type: "SOS",
+    latitude: payload.latitude,
+    longitude: payload.longitude,
+    sourceNodeId: "RESQ-AI-CONSOLE",
+    messageId: payload.messageId,
+    timestamp: new Date().toISOString(),
+    description: payload.description,
+    severity: payload.severity,
+    reporterName: "ResQ AI Console",
+  });
 }
 
 export function postLogout() {

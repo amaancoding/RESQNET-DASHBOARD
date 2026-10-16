@@ -77,12 +77,29 @@ export function normalizeEmergency(raw: Record<string, unknown>): Emergency {
   };
 }
 
-export function normalizeDashboard(raw: DashboardOverview): DashboardOverview {
+export function normalizeDashboard(raw: unknown): DashboardOverview {
+  if (!raw || typeof raw !== "object") {
+    throw new Error("Invalid dashboard response from Express.");
+  }
+
+  const data = raw as Partial<DashboardOverview>;
+  if (!data.stats || typeof data.stats !== "object") {
+    throw new Error("Invalid dashboard response from Express.");
+  }
+
   return {
-    ...raw,
-    recentEmergencies: (raw.recentEmergencies ?? []).map((item) =>
+    stats: data.stats,
+    byType: data.byType ?? [],
+    trend: data.trend ?? [],
+    recentEmergencies: (data.recentEmergencies ?? []).map((item) =>
       normalizeEmergency(item as unknown as Record<string, unknown>),
     ),
+    recentActivity: data.recentActivity ?? [],
+    systemStatus: data.systemStatus ?? [],
+    unavailable: data.unavailable ?? {
+      registeredNodes: "Not available — mesh directory is not stored server-side",
+      messagesForwarded: "Not available — hop traces are not persisted",
+    },
   };
 }
 

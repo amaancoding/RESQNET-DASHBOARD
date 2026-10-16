@@ -29,6 +29,16 @@ export function useAsyncData<T>(loader: () => Promise<T>, refreshKey = "default"
 
   useEffect(() => {
     let cancelled = false;
+    const timeoutId = window.setTimeout(() => {
+      if (!cancelled) {
+        setState({
+          data: null,
+          loading: false,
+          error: "Timed out waiting for the admin API. Confirm Express is running.",
+          key: refreshKey,
+        });
+      }
+    }, 15_000);
 
     loader()
       .then((result) => {
@@ -50,10 +60,14 @@ export function useAsyncData<T>(loader: () => Promise<T>, refreshKey = "default"
             key: refreshKey,
           });
         }
+      })
+      .finally(() => {
+        window.clearTimeout(timeoutId);
       });
 
     return () => {
       cancelled = true;
+      window.clearTimeout(timeoutId);
     };
     // refreshKey and reloadToken control refetch; loader is created per page module or keyed id.
     // eslint-disable-next-line react-hooks/exhaustive-deps

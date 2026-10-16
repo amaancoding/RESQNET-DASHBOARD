@@ -8,7 +8,7 @@
  * Do not point this at MongoDB. The dashboard talks to Express only.
  */
 export const EXPRESS_API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:5000"
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:5000"
 ).replace(/\/$/, "");
 
 /** Same-origin prefix used by the browser client (rewritten to Express). */
@@ -28,4 +28,10 @@ export const ADMIN_ROUTES = {
   analytics: "/api/admin/analytics",
   auditLogs: "/api/admin/audit-logs",
   resqAi: "/api/admin/resq-ai",
+} as const;
+
+export const PUBLIC_ROUTES = {
+  resqAiAnalyze: "/api/resq-ai/analyze",
+  resqAiMeta: "/api/resq-ai/meta",
+  emergency: "/api/emergency",
 } as const;

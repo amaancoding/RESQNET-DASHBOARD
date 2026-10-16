@@ -15,6 +15,7 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
     response = await fetch(`${BROWSER_API_BASE_URL}${path}`, {
       ...init,
       credentials: "include",
+      redirect: "manual",
       headers: {
         Accept: "application/json",
         ...(init.body ? { "Content-Type": "application/json" } : {}),
@@ -25,18 +26,24 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
     throw new ApiError(0, "Network failure. Confirm the Express backend is running.");
   }
 
-  if (response.status === 401) {
-    redirectToLogin();
-    throw new ApiError(401, messageForStatus(401));
+  if (response.status === 401 || response.status === 307 || response.status === 308) {
+    if (response.status === 401) {
+      redirectToLogin();
+    }
+    throw new ApiError(response.status === 401 ? 401 : 0, messageForStatus(response.status === 401 ? 401 : 0));
   }
 
   let payload: unknown = null;
   const text = await response.text();
+  const contentType = response.headers.get("content-type") ?? "";
   if (text) {
+    if (!contentType.includes("application/json")) {
+      throw new ApiError(response.status, "Admin API returned a non-JSON response.");
+    }
     try {
       payload = JSON.parse(text);
     } catch {
-      payload = text;
+      throw new ApiError(response.status, "Admin API returned a non-JSON response.");
     }
   }
 

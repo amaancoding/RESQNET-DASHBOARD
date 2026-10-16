@@ -197,3 +197,85 @@ export interface EmergencyQuery {
   sort?: string;
   order?: "asc" | "desc";
 }
+
+export type ResqAiSeverity = "CRITICAL" | "URGENT" | "NON-URGENT" | "UNKNOWN";
+export type ResqAiConfidenceLabel = "HIGH" | "MEDIUM" | "LOW";
+
+export interface ResqAiAnalysis {
+  intent: string;
+  severity: ResqAiSeverity;
+  confidence: number;
+  confidenceLabel: ResqAiConfidenceLabel;
+  classifierConfidence?: number | null;
+  retrievalSimilarity?: number | null;
+  cueIntent?: string | null;
+  intentSource?: string | null;
+  answer: string;
+  steps: string[];
+  requiresSOS: boolean;
+  matchedQuestion: string | null;
+  source: string | null;
+  disclaimer: string;
+  status: "ok" | "low_confidence";
+}
+
+export interface ResqAiClassifierCard {
+  available: boolean;
+  reason?: string;
+  model?: string;
+  featureExtraction?: string;
+  trainingSamples?: number;
+  testSamples?: number;
+  classes?: number;
+  classNames?: string[];
+  accuracy?: number;
+  precisionMacro?: number;
+  recallMacro?: number;
+  f1Macro?: number;
+  f1Weighted?: number;
+  randomState?: number;
+  trainedAt?: string;
+  classWeight?: string | null;
+  C?: number;
+  solver?: string;
+  acceptThreshold?: number;
+}
+
+export interface ResqAiDatasetMeta {
+  sourceRows?: number;
+  usableRows?: number;
+  indexedRecords?: number;
+  removedInvalidRows?: number;
+  duplicateQuestionsRemoved?: number;
+  missingAnswerCount?: number;
+  categoryCount?: number;
+  categories?: string[];
+  averageQuestionLength?: number;
+  averageAnswerLength?: number;
+  cleanCsv?: string;
+}
+
+export interface ResqAiMeta {
+  available: boolean;
+  method: string;
+  disclaimer: string;
+  dataset: ResqAiDatasetMeta;
+  classifier?: ResqAiClassifierCard;
+  queryLogsPersisted: boolean;
+}
+
+export interface ResqAiSnapshot {
+  available: boolean;
+  message: string;
+  data: ResqAiMeta | null;
+}
+
+export interface CreatedEmergency {
+  id: string;
+  type: string;
+  latitude: number;
+  longitude: number;
+  timestamp: string;
+  messageId?: string;
+  sourceNodeId?: string;
+}

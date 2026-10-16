@@ -48,6 +48,8 @@ Phone contract (unchanged, no admin auth):
 - `GET /api/locations`
 - `POST /api/sync`
 - `POST /api/first-aid`
+- `POST /api/resq-ai/analyze`
+- `GET /api/resq-ai/meta`
 - `GET /api/health`
 
 Admin (cookie or `Authorization: Bearer`):
@@ -65,7 +67,7 @@ Admin (cookie or `Authorization: Bearer`):
 - `GET /api/admin/audit-logs` (admin)
 - `GET /api/admin/mesh`
 - `GET /api/admin/responders`
-- `GET /api/admin/resq-ai`
+- `GET /api/admin/resq-ai` — corpus snapshot from the Python engine; query logs are still not stored
 
 Unavailable resources return `{ "available": false, "message": "...", "data": null }` instead of invented telemetry.
 
